@@ -1,0 +1,27 @@
+#!/bin/bash
+
+FILENAME="$1"
+
+if [ ! -f "$FILENAME" ]; then
+  echo "Файл не существует"
+  for i in {1..10}; do
+    echo "$((RANDOM % 100))" >> "$FILENAME"
+  done
+fi
+
+count=0
+while IFS= read -r line; do
+  echo "$line" | nc localhost 12345
+  ((count++))
+done < "$FILENAME"
+
+echo "Отправлено строк: $count"
+
+{
+  while true; do
+    date '+%Y-%m-%d %H:%M:%S' >> log.txt
+    sleep 60
+  done
+}
+
+
